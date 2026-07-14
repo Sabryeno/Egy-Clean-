@@ -1,0 +1,71 @@
+# Egy Cleans — Flutter (Android)
+
+A native Flutter build of the **Egy Cleans** home-cleaning marketplace: a full
+two-sided app (customer + company/vendor) with an **eased login**, a live-updating
+booking price, and **real-time in-app sync** — placing a booking instantly updates
+the bookings list, the company dashboard's incoming feed, and both notification
+feeds. Bilingual (English / العربية, full RTL) and light/dark.
+
+## Get the APK
+
+You cannot build a signed Android APK inside the Claude Code sandbox (the network
+policy blocks Google's SDK/Maven hosts). Two supported ways to produce it:
+
+### A) GitHub Actions (push-button, no local setup)
+1. Push this repo to GitHub.
+2. The workflow `.github/workflows/build-apk.yml` runs on every push to `main`
+   (or trigger it manually from the **Actions** tab → *Build Android APK* →
+   *Run workflow*).
+3. When it finishes, download the **`egy-cleans-apk`** artifact from the run —
+   that's `app-release.apk`. Push a tag like `v1.0.0` to also attach it to a
+   GitHub Release.
+
+### B) Build locally
+Requires the Flutter SDK + Android SDK on your machine.
+```bash
+cd egy_cleans
+flutter pub get
+flutter build apk --release
+# → build/app/outputs/flutter-apk/app-release.apk
+```
+Copy the APK to an Android device and install it (allow "install from unknown
+sources"). For an app-bundle instead: `flutter build appbundle`.
+
+## Run it in dev
+```bash
+cd egy_cleans
+flutter pub get
+flutter run            # on a connected device/emulator
+flutter run -d chrome  # or in the browser
+```
+
+## Verify
+```bash
+flutter analyze        # static analysis — clean
+flutter test           # end-to-end flow + RTL widget tests
+```
+
+## Login (eased)
+The login screen is streamlined: pick **Individual / Corporate**, credentials are
+pre-filled for demo, and there are two **one-tap** buttons — *Enter as customer*
+and *Enter as company* — that skip straight in. Corporate sign-up still offers the
+document-upload → under-review route.
+
+## How real-time sync works
+`lib/store.dart` is a single `ChangeNotifier` (`AppStore`) holding all state.
+Screens read it through `AppScope` (an `InheritedNotifier`), so any mutation +
+`notifyListeners()` rebuilds every dependent screen. `pay()` writes one booking
+and simultaneously pushes a matching job to the company's incoming feed and a
+notification to both sides; company `approve` / `acknowledge` push status
+notifications back to the customer. No backend — it's live within the app.
+
+## Project map
+- `lib/store.dart` — reactive store: state, actions, pricing, live sync, feeds
+- `lib/i18n.dart` · `lib/data.dart` · `lib/theme.dart` · `lib/models.dart` — data layer
+- `lib/root.dart` — screen router + status-bar theming + bottom bars
+- `lib/widgets/` — `AppScope`, shared UI, nav bars, bottom sheets
+- `lib/screens/` — auth, customer, and company screens
+- `test/flow_test.dart` — end-to-end + RTL widget tests
+
+> Note: notifications are **in-app** (a live feed + badges). True system push
+> would add `firebase_messaging`/`flutter_local_notifications` and an FCM project.

@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+import 'models.dart';
+
+const List<CompanyDef> kCompanies = [
+  CompanyDef(mono: 'S', grad: [Color(0xFF1E63FF), Color(0xFF1546C0)], name: {'en': 'Sparkle Masr', 'ar': 'سباركل مصر'}, tag: {'en': 'Deep cleaning specialists · Nasr City', 'ar': 'متخصصو التنظيف العميق · مدينة نصر'}, rating: '4.9', reviews: 320, dist: '1.2', base: 90, tags: ['a', 't'], hero: '✨', coverage: {'en': 'Nasr City, Heliopolis, Downtown', 'ar': 'مدينة نصر، مصر الجديدة، وسط البلد'}),
+  CompanyDef(mono: 'N', grad: [Color(0xFF16B364), Color(0xFF0F8B4C)], name: {'en': 'Nadafa Plus', 'ar': 'نضافة بلس'}, tag: {'en': 'Home & office · Maadi', 'ar': 'منازل ومكاتب · المعادي'}, rating: '4.7', reviews: 210, dist: '2.6', base: 110, tags: ['i'], hero: '🧽', coverage: {'en': 'Maadi, Zahraa, Katameya', 'ar': 'المعادي، الزهراء، القطامية'}),
+  CompanyDef(mono: 'L', grad: [Color(0xFFF5A623), Color(0xFFE0850C)], name: {'en': 'Lamsa Home', 'ar': 'لمسة'}, tag: {'en': 'Move-in / move-out · Dokki', 'ar': 'انتقال السكن · الدقي'}, rating: '4.8', reviews: 180, dist: '3.4', base: 100, tags: ['t'], hero: '🏠', coverage: {'en': 'Dokki, Mohandessin, Agouza', 'ar': 'الدقي، المهندسين، العجوزة'}),
+  CompanyDef(mono: 'B', grad: [Color(0xFF7C3AED), Color(0xFF5B21B6)], name: {'en': 'Bayti Clean', 'ar': 'بيتي كلين'}, tag: {'en': 'Premium villa care · Zamalek', 'ar': 'عناية فاخرة بالفلل · الزمالك'}, rating: '4.9', reviews: 410, dist: '4.1', base: 140, tags: ['a', 't'], hero: '🌟', coverage: {'en': 'Zamalek, Garden City, 6th October', 'ar': 'الزمالك، جاردن سيتي، السادس من أكتوبر'}),
+];
+
+const List<int> kRates = [90, 130, 150, 110, 170];
+const List<double> kPropMult = [1, 1, 1.2, 1.4, 1.6, 1.8];
+const List<String> kTimes = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00'];
+const List<String> kCleaningEmoji = ['🧹', '🫧', '📦', '🛋️', '🏗️'];
+const List<String> kPropEmoji = ['🏠', '🛏️', '🛏️', '🛌', '🏘️', '🏡'];
+
+List<CServiceItem> initialServices() => [
+      const CServiceItem(id: 1, typeIdx: 0, rate: 90, cleaners: 2, capacity: '120m²'),
+      const CServiceItem(id: 2, typeIdx: 1, rate: 130, cleaners: 3, capacity: '200m²'),
+      const CServiceItem(id: 3, typeIdx: 3, rate: 110, cleaners: 2, capacity: '6 pcs'),
+    ];
+
+List<StaffMember> initialStaff() => const [
+      StaffMember(name: 'Ahmed Hassan', mono: 'A', color: Color(0xFF1E63FF), rating: 4.9, jobs: 320, role: 'Lead cleaner'),
+      StaffMember(name: 'Mona Farid', mono: 'M', color: Color(0xFF16B364), rating: 4.8, jobs: 210, role: 'Deep-clean specialist'),
+      StaffMember(name: 'Sara Nabil', mono: 'S', color: Color(0xFFF5A623), rating: 4.7, jobs: 150, role: 'Upholstery care'),
+    ];
+
+List<Booking> initialBookings() => [
+      const Booking(mono: 'S', grad: [Color(0xFF1E63FF), Color(0xFF1546C0)], name: 'Sparkle Masr', service: 'Deep clean', datetime: 'Thu 16 Jul · 10:00', id: 'EGY-284417', total: 'EGP 618', status: 'upcoming', paid: true, method: 'card'),
+      const Booking(mono: 'L', grad: [Color(0xFFF5A623), Color(0xFFE0850C)], name: 'Lamsa Home', service: 'Standard clean', datetime: 'Sun 5 Jul · 14:00', id: 'EGY-201355', total: 'EGP 297', status: 'past', paid: true, method: 'instapay'),
+    ];
+
+List<IncomingJob> initialIncoming() => [
+      IncomingJob(customer: 'Omar Adel', service: 'Deep clean · 3h', datetime: 'Today 14:00', total: 'EGP 618', method: 'cash', state: 'pending', paid: false, staff: 'Ahmed Hassan', svcIdx: 1, bucket: 'today'),
+      IncomingJob(customer: 'Mona Saleh', service: 'Standard · 2h', datetime: 'Today 17:00', total: 'EGP 297', method: 'paid', state: 'new', paid: true, payMethod: 'card', staff: 'Mona Farid', svcIdx: 0, bucket: 'today'),
+      IncomingJob(customer: 'Youssef Ali', service: 'Sofa & carpet', datetime: 'Tomorrow 11:00', total: 'EGP 450', method: 'paid', state: 'ack', paid: true, payMethod: 'applepay', staff: 'Sara Nabil', svcIdx: 3, bucket: 'week'),
+    ];
+
+List<CustomerHistoryItem> initialCHistory() => const [
+      CustomerHistoryItem(customer: 'Nour Hany', service: 'Deep clean', datetime: 'Fri 11 Jul · 09:00', total: 'EGP 720', status: 'upcoming', paid: true, method: 'instapay', staff: 'Ahmed Hassan', svcIdx: 1),
+      CustomerHistoryItem(customer: 'Karim Fouad', service: 'Move out', datetime: 'Wed 2 Jul · 12:00', total: 'EGP 540', status: 'past', paid: true, method: 'cash', staff: 'Mona Farid', svcIdx: 2),
+      CustomerHistoryItem(customer: 'Salma Adel', service: 'Standard', datetime: 'Mon 30 Jun · 16:00', total: 'EGP 280', status: 'past', paid: false, method: 'cash', staff: 'Sara Nabil', svcIdx: 0),
+    ];
