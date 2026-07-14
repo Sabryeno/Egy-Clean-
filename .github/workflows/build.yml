@@ -1,0 +1,31 @@
+name: Build APK
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show repo layout
+        run: |
+          echo "===== top level ====="; ls -la
+          echo "===== pubspec files ====="; find . -name pubspec.yaml -not -path '*/.*'
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '3.44.6', channel: stable }
+      - name: Build
+        run: |
+          set -e
+          PUBSPEC=$(find . -name pubspec.yaml -not -path '*/.*' | head -1)
+          if [ -z "$PUBSPEC" ]; then echo "::error::No pubspec.yaml in repo — app files weren't uploaded"; exit 1; fi
+          DIR=$(dirname "$PUBSPEC"); echo "Building in: $DIR"
+          cd "$DIR"
+          flutter pub get
+          flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: egy-cleans-apk
+          path: '**/app-release.apk'
+          if-no-files-found: error
